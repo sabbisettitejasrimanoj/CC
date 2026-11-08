@@ -1,0 +1,5 @@
+.ui-loader { animation: ui-loader-spin 700ms linear infinite; border: 3px solid var(--border, #e5e4e7); border-right-color: var(--accent, #2563eb); border-radius: 50%; display: inline-block; }
+.ui-loader--small { height: 16px; width: 16px; }
+.ui-loader--medium { height: 24px; width: 24px; }
+.ui-loader--large { height: 40px; width: 40px; }
+@keyframes ui-loader-spin { to { transform: rotate(360deg); } }

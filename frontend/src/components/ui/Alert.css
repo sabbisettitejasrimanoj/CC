@@ -1,0 +1,8 @@
+.ui-alert { align-items: flex-start; border: 1px solid; border-radius: 6px; display: flex; font-size: 0.875rem; gap: 12px; justify-content: space-between; line-height: 1.45; padding: 12px 14px; }
+.ui-alert__content { min-width: 0; }
+.ui-alert__title { display: block; margin-bottom: 2px; }
+.ui-alert__dismiss { background: transparent; border: 0; color: currentColor; cursor: pointer; font-size: 1.25rem; line-height: 1; padding: 0 2px; }
+.ui-alert__info, .ui-alert--info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+.ui-alert--success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+.ui-alert--warning { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.ui-alert--danger { background: #fef2f2; border-color: #fecaca; color: #b42318; }

@@ -1,0 +1,5 @@
+.ui-avatar { align-items: center; background: var(--accent-bg, #dbeafe); border-radius: 50%; color: var(--accent, #2563eb); display: inline-flex; flex: 0 0 auto; font-weight: 700; justify-content: center; overflow: hidden; vertical-align: middle; }
+.ui-avatar img { height: 100%; object-fit: cover; width: 100%; }
+.ui-avatar--small { font-size: 0.6875rem; height: 28px; width: 28px; }
+.ui-avatar--medium { font-size: 0.875rem; height: 40px; width: 40px; }
+.ui-avatar--large { font-size: 1.125rem; height: 56px; width: 56px; }

@@ -1,0 +1,8 @@
+.ui-input { display: flex; flex-direction: column; gap: 6px; }
+.ui-input__label { color: var(--text-h, #08060d); font-size: 0.875rem; font-weight: 600; }
+.ui-input__control { background: var(--bg, #fff); border: 1px solid var(--border, #e5e4e7); border-radius: 6px; box-sizing: border-box; color: var(--text-h, #08060d); font: inherit; font-size: 0.9375rem; min-height: 42px; padding: 9px 12px; transition: border-color 160ms ease, box-shadow 160ms ease; width: 100%; }
+.ui-input__control::placeholder { color: var(--text, #6b6375); opacity: 0.75; }
+.ui-input__control:focus { border-color: var(--accent, #2563eb); box-shadow: 0 0 0 3px var(--accent-bg, #dbeafe); outline: none; }
+.ui-input__control--error { border-color: #c2413f; }
+.ui-input__message { color: var(--text, #6b6375); font-size: 0.75rem; line-height: 1.35; margin: 0; }
+.ui-input__message--error { color: #b42318; }

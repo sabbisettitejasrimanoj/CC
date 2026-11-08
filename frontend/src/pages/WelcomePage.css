@@ -1,0 +1,792 @@
+/* ==========================================================================
+   CHESS CURE — WELCOME & AUTHENTICATION SCREEN
+   Theme: Split-Screen Classical Atelier · Dark Walnut, Oak & Sanded Maple
+   ========================================================================== */
+
+.welcome-screen {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  background-color: #140e0a;
+  color: #f7f2ea;
+  overflow-x: hidden;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   SPLIT SCREEN LAYOUT
+   -------------------------------------------------------------------------- */
+.welcome-left {
+  position: relative;
+  flex: 1.15;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 56px;
+  background: 
+    radial-gradient(circle at 75% 35%, rgba(162, 103, 53, 0.14) 0%, transparent 60%),
+    radial-gradient(circle at 10% 85%, rgba(56, 102, 65, 0.16) 0%, transparent 55%),
+    linear-gradient(135deg, #20160f 0%, #150f0a 70%, #0d0906 100%);
+  border-right: 1px solid rgba(162, 103, 53, 0.2);
+  overflow: hidden;
+}
+
+.welcome-right {
+  position: relative;
+  flex: 0.95;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 48px;
+  background: 
+    radial-gradient(circle at 50% 15%, rgba(162, 103, 53, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #18110b 0%, #100c08 100%);
+}
+
+/* Background floating chess glyphs on left side */
+.welcome-ambient-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-watermark {
+  position: absolute;
+  color: #704729;
+  opacity: 0.05;
+  user-select: none;
+  font-family: 'Cinzel', serif;
+  filter: blur(1px);
+}
+
+.ambient-watermark.k-1 {
+  top: 6%;
+  right: 10%;
+  font-size: 220px;
+  transform: rotate(15deg);
+}
+
+.ambient-watermark.k-2 {
+  bottom: 8%;
+  left: 6%;
+  font-size: 260px;
+  transform: rotate(-18deg);
+}
+
+/* Floating warm dust particles */
+.floating-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #ebd8ba;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(162, 103, 53, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   LEFT SIDE CONTENT
+   -------------------------------------------------------------------------- */
+.welcome-brand-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.welcome-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.welcome-logo-badge {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3d281a 0%, #1c120c 100%);
+  border: 1px solid rgba(162, 103, 53, 0.45);
+  box-shadow: 
+    0 6px 18px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(235, 216, 186, 0.35);
+}
+
+.welcome-logo-badge span {
+  font-size: 26px;
+  color: #ebd8ba;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+}
+
+.welcome-logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-logo-title {
+  font-family: 'Cinzel', serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #faf7f0;
+}
+
+.welcome-logo-title span {
+  color: #b87d46;
+}
+
+.welcome-logo-subtitle {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #9c8a76;
+  text-transform: uppercase;
+}
+
+.welcome-origin-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(43, 31, 23, 0.6);
+  border: 1px solid rgba(162, 103, 53, 0.25);
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #c9935f;
+}
+
+.origin-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #386641;
+  box-shadow: 0 0 6px rgba(56, 102, 65, 0.6);
+}
+
+/* Center Artwork & Chess Showcase */
+.welcome-hero-scene {
+  position: relative;
+  z-index: 2;
+  margin: 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.chess-artwork-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(46, 32, 22, 0.7) 0%, rgba(20, 14, 10, 0.85) 100%);
+  border: 1px solid rgba(162, 103, 53, 0.28);
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    inset 0 1px 1px rgba(235, 216, 186, 0.2);
+}
+
+/* Artistic Board Inset */
+.artistic-board-preview {
+  position: relative;
+  border-radius: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #2b1d14 0%, #150f0a 100%);
+  border: 2px solid #5a3a23;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+}
+
+.artistic-grid-mini {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  aspect-ratio: 1.5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.mini-sq-light { background: #ebd5b3; }
+.mini-sq-dark { background: #825232; }
+
+.artistic-piece-spotlight {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: radial-gradient(circle at center, rgba(162, 103, 53, 0.2) 0%, transparent 68%);
+}
+
+.spotlight-king,
+.spotlight-knight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 300ms ease;
+}
+
+.spotlight-king:hover,
+.spotlight-knight:hover {
+  transform: translateY(-6px) scale(1.05);
+}
+
+.king-glyph {
+  font-size: 82px;
+  line-height: 1;
+  color: #faf5ed;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 12px rgba(162, 103, 53, 0.4));
+}
+
+.knight-glyph {
+  font-size: 74px;
+  line-height: 1;
+  color: #ebd8ba;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 14px rgba(162, 103, 53, 0.5));
+}
+
+.spotlight-caption {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #cbb292;
+  margin-top: 4px;
+}
+
+/* Headings */
+.welcome-hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.welcome-main-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: 0.03em;
+  color: #faf7f0;
+}
+
+.heading-wood-accent {
+  background: linear-gradient(135deg, #ebd8ba 0%, #b87d46 60%, #8c572b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-subtitles-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.welcome-subtitles-stack p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #c4b5a0;
+  line-height: 1.5;
+}
+
+.subtitle-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #a26735;
+  box-shadow: 0 0 6px rgba(162, 103, 53, 0.6);
+}
+
+.welcome-quote-footer {
+  position: relative;
+  z-index: 2;
+  padding-top: 20px;
+  border-top: 1px solid rgba(162, 103, 53, 0.18);
+}
+
+.welcome-quote-footer blockquote {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #9e8d79;
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT SIDE — PREMIUM AUTHENTICATION CARD
+   -------------------------------------------------------------------------- */
+.auth-card-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.auth-card {
+  position: relative;
+  border-radius: 24px;
+  padding: 38px 36px;
+  background: linear-gradient(155deg, rgba(34, 24, 17, 0.92) 0%, rgba(20, 14, 10, 0.95) 100%);
+  border: 1px solid rgba(162, 103, 53, 0.3);
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    0 0 32px rgba(162, 103, 53, 0.08),
+    inset 0 1px 1px rgba(235, 216, 186, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.auth-card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.auth-crest-seal {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3d281a 0%, #1c120c 100%);
+  border: 1.5px solid #a26735;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  margin-bottom: 14px;
+}
+
+.crest-seal-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(162, 103, 53, 0.4);
+  animation: rotateSeal 20s linear infinite;
+}
+
+@keyframes rotateSeal {
+  100% { transform: rotate(360deg); }
+}
+
+.crest-seal-glyph {
+  font-size: 28px;
+  color: #ebd8ba;
+  line-height: 1;
+}
+
+.auth-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  color: #faf7f0;
+  margin-bottom: 6px;
+}
+
+.auth-card-subtitle {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #b09e89;
+}
+
+/* --------------------------------------------------------------------------
+   AUTHENTICATION BUTTONS
+   -------------------------------------------------------------------------- */
+.auth-buttons-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+/* Primary Button: Continue with Google */
+.btn-auth-google {
+  position: relative;
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1f1f1f;
+  border: 1px solid #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-auth-google:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #fdfdfd;
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(255, 255, 255, 0.25);
+  border-color: #ebd8ba;
+}
+
+.btn-auth-google:active {
+  transform: translateY(0);
+}
+
+.google-icon-svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Secondary Button: Continue as Guest */
+.btn-auth-guest {
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: rgba(46, 32, 22, 0.85);
+  color: #ebd8ba;
+  border: 1px solid rgba(162, 103, 53, 0.4);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-auth-guest:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(62, 44, 30, 0.95);
+  border-color: #ebd8ba;
+  box-shadow: 
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    0 0 14px rgba(162, 103, 53, 0.25);
+}
+
+.guest-pawn-glyph {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.guest-note-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #9c8a76;
+  margin-top: -4px;
+}
+
+.guest-note-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #386641;
+}
+
+/* Divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 14px;
+}
+
+.auth-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(162, 103, 53, 0.18);
+}
+
+.auth-divider-text {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #8c7862;
+  text-transform: uppercase;
+}
+
+/* Additional Providers Grid */
+.additional-providers-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.btn-provider-subtle {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border-radius: 9px;
+  background: rgba(30, 21, 15, 0.7);
+  border: 1px solid rgba(162, 103, 53, 0.2);
+  font-size: 11px;
+  font-weight: 600;
+  color: #b5a593;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.btn-provider-subtle:hover {
+  background: rgba(46, 32, 22, 0.9);
+  color: #faf7f0;
+  border-color: rgba(162, 103, 53, 0.4);
+}
+
+.btn-provider-subtle svg {
+  flex-shrink: 0;
+}
+
+/* Expandable Email Box */
+.email-login-drawer {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(24, 17, 12, 0.85);
+  border: 1px solid rgba(162, 103, 53, 0.25);
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.email-input-field {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: rgba(14, 10, 7, 0.85);
+  border: 1px solid rgba(162, 103, 53, 0.24);
+  color: #faf7f0;
+  font-size: 12px;
+}
+
+.email-input-field:focus {
+  border-color: #a26735;
+  outline: none;
+}
+
+.btn-email-submit {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #a26735 0%, #764724 100%);
+  color: #faf7f0;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(235, 216, 186, 0.2);
+  transition: all 160ms ease;
+}
+
+.btn-email-submit:hover {
+  background: linear-gradient(135deg, #b87d46 0%, #8c552b 100%);
+}
+
+.email-toggle-link {
+  font-size: 11px;
+  color: #9c8a76;
+  text-align: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.email-toggle-link span {
+  color: #c9935f;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   FEATURE HIGHLIGHTS (3 Cards)
+   -------------------------------------------------------------------------- */
+.welcome-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 10px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(162, 103, 53, 0.16);
+}
+
+.welcome-feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(30, 21, 15, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 180ms ease;
+}
+
+.welcome-feature-card:hover {
+  background: rgba(46, 32, 22, 0.7);
+  border-color: rgba(162, 103, 53, 0.3);
+  transform: translateX(3px);
+}
+
+.feature-glyph-box {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(162, 103, 53, 0.15);
+  border: 1px solid rgba(162, 103, 53, 0.25);
+  color: #ebd8ba;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.feature-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.feature-title {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #faf7f0;
+}
+
+.feature-desc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #9c8a76;
+}
+
+/* --------------------------------------------------------------------------
+   SMALL FOOTER
+   -------------------------------------------------------------------------- */
+.auth-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: 11px;
+  color: #7d6c5a;
+}
+
+.footer-link {
+  color: #7d6c5a;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+
+.footer-link:hover {
+  color: #c9935f;
+}
+
+.footer-divider-dot {
+  color: rgba(162, 103, 53, 0.3);
+}
+
+.footer-heart {
+  color: #c85a32;
+}
+
+/* Loading Spinner on button click */
+.auth-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  border-top-color: #120e0a;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.auth-spinner-wood {
+  border-color: rgba(235, 216, 186, 0.25);
+  border-top-color: #ebd8ba;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVENESS (Laptop, Tablet, Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .welcome-screen {
+    flex-direction: column;
+  }
+  .welcome-left {
+    min-height: auto;
+    padding: 36px 28px;
+    border-right: none;
+    border-bottom: 1px solid rgba(162, 103, 53, 0.2);
+  }
+  .welcome-main-heading {
+    font-size: 32px;
+  }
+  .chess-artwork-container {
+    max-width: 380px;
+  }
+  .welcome-right {
+    min-height: auto;
+    padding: 36px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .welcome-left {
+    padding: 24px 20px;
+  }
+  .welcome-main-heading {
+    font-size: 26px;
+  }
+  .artistic-board-preview {
+    padding: 10px;
+  }
+  .king-glyph {
+    font-size: 56px;
+  }
+  .knight-glyph {
+    font-size: 50px;
+  }
+  .auth-card {
+    padding: 28px 20px;
+  }
+  .additional-providers-row {
+    grid-template-columns: 1fr;
+  }
+}
