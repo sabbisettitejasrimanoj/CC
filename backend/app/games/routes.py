@@ -806,4 +806,66 @@ def undo_game_turn(game_id):
         }
     ), 200
 
-    
+from app.services.position_analyzer import analyze_position
+
+
+@games_blueprint.post("/<game_id>/analysis")
+def analyze_game_position(game_id):
+    if not ObjectId.is_valid(game_id):
+        return jsonify({
+            "success": False,
+            "message": "Invalid game ID.",
+        }), 400
+
+    database = get_database()
+
+    game = database.games.find_one({
+        "_id": ObjectId(game_id),
+        "opponent_type": "ai",
+    })
+
+    if game is None:
+        return jsonify({
+            "success": False,
+            "message": "Game not found.",
+        }), 404
+
+    try:
+        board = chess.Board(game["current_fen"])
+
+        if not board.is_valid():
+            raise ValueError("Invalid chess position.")
+
+    except (ValueError, TypeError):
+        return jsonify({
+            "success": False,
+            "message": "The saved chess position is invalid.",
+        }), 500
+
+    data = request.get_json(silent=True) or {}
+
+    depth = data.get("depth")
+
+    if depth is None:
+        depth = {
+            "easy": 1,
+            "medium": 2,
+            "hard": 3,
+        }.get(game.get("ai_level", "medium"), 2)
+
+    if type(depth) is not int or depth not in (1, 2, 3):
+        return jsonify({
+            "success": False,
+            "message": "Analysis depth must be 1, 2 or 3.",
+        }), 400
+
+    analysis = analyze_position(
+        board,
+        depth=depth,
+        top_n=3,
+    )
+
+    return jsonify({
+        "success": True,
+        "analysis": analysis,
+    }), 200  

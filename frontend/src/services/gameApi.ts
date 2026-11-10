@@ -154,3 +154,45 @@ export async function undoGameTurn(gameId: string): Promise<GameHistory> {
   }
   return { game: response.game, moves: response.moves }
 }
+
+
+export interface PositionAnalysisMove {
+  uci: string;
+  san: string;
+  score: number;
+  explanation: string;
+  is_mate: boolean;
+}
+
+export interface PositionAnalysis {
+  status: 'analyzed' | 'checkmate' | 'stalemate' | 'draw';
+  depth?: number;
+  best_move: PositionAnalysisMove | null;
+  alternatives: PositionAnalysisMove[];
+  score_unit?: 'centipawns';
+  mate_detected?: boolean;
+}
+
+export const analyzeGamePosition = async (
+  gameId: string,
+  depth?: number,
+): Promise<PositionAnalysis> => {
+  const response = await fetch(
+    `${apiBaseUrl}/api/games/${gameId}/analysis`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(depth === undefined ? {} : { depth }),
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message ?? 'Position analysis failed.');
+  }
+
+  return data.analysis as PositionAnalysis;
+};

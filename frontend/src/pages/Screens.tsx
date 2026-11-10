@@ -31,6 +31,7 @@ import {
   useGame,
   type Difficulty,
   type BoardWoodTheme,
+  type PromotionPiece,
 } from '../context/GameContext'
 import type { PieceStyle } from '../components/ChessPieces'
 
@@ -350,6 +351,10 @@ export function GamePage() {
   })
 
   const [selected, setSelected] = useState<Square | null>(null)
+  const [pendingPromotion, setPendingPromotion] = useState<{
+  from: Square
+  to: Square
+} | null>(null)
   const [showToast, setShowToast] = useState(false)
   const [showResign, setShowResign] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -378,16 +383,43 @@ export function GamePage() {
   }, [navigate, showToast])
 
   async function selectSquare(square: Square) {
-    if (turn !== 'w' || gameOver || isBusy || !gameId) return
-    if (selected && legalTargets.includes(square)) {
-      setSelected(null)
-      const shouldVerify = await playHumanMove(selected, square)
-      if (shouldVerify) setShowToast(true)
+  if (turn !== 'w' || gameOver || isBusy || !gameId) return
+
+  if (selected && legalTargets.includes(square)) {
+    const promotionMoves = game.moves({
+      square: selected,
+      verbose: true,
+    }).filter((move) => move.to === square && move.promotion)
+
+    if (promotionMoves.length > 0) {
+      setPendingPromotion({ from: selected, to: square })
       return
     }
-    const piece = game.get(square)
-    setSelected(piece?.color === 'w' ? square : null)
+
+    setSelected(null)
+
+    const shouldVerify = await playHumanMove(selected, square)
+
+    if (shouldVerify) setShowToast(true)
+    return
   }
+
+  const piece = game.get(square)
+  setSelected(piece?.color === 'w' ? square : null)
+}
+
+async function choosePromotion(piece: PromotionPiece) {
+  if (!pendingPromotion) return
+
+  const { from, to } = pendingPromotion
+
+  setPendingPromotion(null)
+  setSelected(null)
+
+  const shouldVerify = await playHumanMove(from, to, piece)
+
+  if (shouldVerify) setShowToast(true)
+}
 
   function showHint() {
     if (turn !== 'w' || gameOver) return
@@ -735,6 +767,53 @@ export function GamePage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Pawn Promotion Dialog */}
+<AnimatePresence>
+  {pendingPromotion && (
+    <motion.div
+      className="modal-backdrop"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="confirm-modal"
+        initial={{ y: 14, scale: 0.98 }}
+        animate={{ y: 0, scale: 1 }}
+        exit={{ y: 8, scale: 0.98 }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="promotion-title"
+      >
+        <span className="modal-icon">
+          <Crown size={22} />
+        </span>
+
+        <h2 id="promotion-title">Promote your pawn</h2>
+        <p>Choose the piece you want your pawn to become.</p>
+
+        <div className="modal-actions">
+          {([
+            ['q', 'Queen'],
+            ['r', 'Rook'],
+            ['b', 'Bishop'],
+            ['n', 'Knight'],
+          ] as [PromotionPiece, string][]).map(([piece, label]) => (
+            <button
+              key={piece}
+              type="button"
+              className="button button--secondary"
+              onClick={() => choosePromotion(piece)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
       {/* Quick Help Modal */}
       <AnimatePresence>

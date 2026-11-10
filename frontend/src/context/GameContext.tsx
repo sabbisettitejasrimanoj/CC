@@ -26,6 +26,7 @@ import {
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert'
 export type BoardWoodTheme = 'Classic' | 'Rosewood' | 'Oak'
+export type PromotionPiece = 'q' | 'r' | 'b' | 'n'
 
 type GameContextValue = {
   difficulty: Difficulty
@@ -235,41 +236,75 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function playHumanMove(from: Square, to: Square) {
-    const currentGameId = gameIdRef.current
-    if (!currentGameId || engine.current.turn() !== 'w' || engine.current.isGameOver()) return false
-    const legalMove = engine.current
-      .moves({ square: from, verbose: true })
-      .find((move) => move.to === to && (!move.promotion || move.promotion === 'q'))
-    if (!legalMove) return false
+  async function playHumanMove(
+  from: Square,
+  to: Square,
+  promotion: PromotionPiece = 'q'
+) {
+  const currentGameId = gameIdRef.current
 
-    setIsBusy(true)
-    setApiError(null)
-    try {
-      const response = await submitPlayerMove(
-        currentGameId,
-        from,
-        to,
-        legalMove.promotion,
-      )
-      const moveResult = engine.current.move({ from, to, promotion: 'q' })
-      playerMoves.current += 1
-      triggerSoundForMove(moveResult)
-      syncState(response.game.current_fen, response.game.status)
-      const openedSecretChat = Boolean(response.trigger?.chat_opened)
-      if (response.game.status === 'active' && response.game.current_turn === 'black') {
-        await makeAiMove(currentGameId)
-      }
-      return openedSecretChat
-    } catch (error) {
-      setApiError(errorMessage(error))
-      try { restoreGame(await getGameHistory(currentGameId)) } catch { /* keep last known state */ }
-      return false
-    } finally {
-      setIsBusy(false)
-    }
+  if (
+    !currentGameId ||
+    engine.current.turn() !== 'w' ||
+    engine.current.isGameOver()
+  ) {
+    return false
   }
 
+  const legalMove = engine.current
+    .moves({ square: from, verbose: true })
+    .find((move) =>
+      move.to === to &&
+      (move.promotion ? move.promotion === promotion : true)
+    )
+
+  if (!legalMove) return false
+
+  setIsBusy(true)
+  setApiError(null)
+
+  try {
+    const response = await submitPlayerMove(
+      currentGameId,
+      from,
+      to,
+      legalMove.promotion ?? ''
+    )
+
+    const moveResult = engine.current.move({
+      from,
+      to,
+      ...(legalMove.promotion ? { promotion: legalMove.promotion } : {}),
+    })
+
+    playerMoves.current += 1
+    triggerSoundForMove(moveResult)
+    syncState(response.game.current_fen, response.game.status)
+
+    const openedSecretChat = Boolean(response.trigger?.chat_opened)
+
+    if (
+      response.game.status === 'active' &&
+      response.game.current_turn === 'black'
+    ) {
+      await makeAiMove(currentGameId)
+    }
+
+    return openedSecretChat
+  } catch (error) {
+    setApiError(errorMessage(error))
+
+    try {
+      restoreGame(await getGameHistory(currentGameId))
+    } catch {
+      // Keep the last known state.
+    }
+
+    return false
+  } finally {
+    setIsBusy(false)
+  }
+}
   async function undoMove() {
     const currentGameId = gameIdRef.current
     if (!currentGameId || isBusy) return

@@ -121,3 +121,62 @@ def test_capturing_piece_alone_does_not_open_secret_chat(monkeypatch):
     assert capture.get_json()["trigger"] is None
     assert capture.get_json()["game"]["secret_chat_open"] is False
     assert database.trigger_events.documents == []
+
+def test_game_position_analysis_returns_best_move(monkeypatch):
+    database = Database()
+    monkeypatch.setattr(
+        game_routes,
+        "get_database",
+        lambda: database,
+    )
+
+    client = create_app("testing").test_client()
+
+    created = client.post(
+        "/api/games/ai",
+        json={"difficulty": "Beginner"},
+    )
+
+    game_id = created.get_json()["game"]["id"]
+
+    response = client.post(
+        f"/api/games/{game_id}/analysis",
+        json={},
+    )
+
+    assert response.status_code == 200
+
+    result = response.get_json()
+
+    assert result["success"] is True
+    assert result["analysis"]["status"] == "analyzed"
+    assert result["analysis"]["best_move"] is not None
+    assert result["analysis"]["best_move"]["uci"]
+    assert result["analysis"]["best_move"]["san"]
+    assert len(result["analysis"]["alternatives"]) <= 3
+
+
+def test_game_position_analysis_rejects_invalid_depth(monkeypatch):
+    database = Database()
+    monkeypatch.setattr(
+        game_routes,
+        "get_database",
+        lambda: database,
+    )
+
+    client = create_app("testing").test_client()
+
+    created = client.post(
+        "/api/games/ai",
+        json={"difficulty": "Beginner"},
+    )
+
+    game_id = created.get_json()["game"]["id"]
+
+    response = client.post(
+        f"/api/games/{game_id}/analysis",
+        json={"depth": 10},
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["success"] is False
