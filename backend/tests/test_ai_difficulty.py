@@ -169,3 +169,34 @@ def test_ai_returns_none_when_no_moves_exist():
         )
         is None
     )
+    
+
+def test_see_identifies_winning_capture():
+    """Capturing an undefended queen should gain 900 points."""
+    board = chess.Board(
+        "7k/8/8/3q4/8/8/8/K2R4 w - - 0 1"
+    )
+    move = chess.Move.from_uci("d1d5")
+
+    assert move in board.legal_moves
+    assert ai_engine.static_exchange_eval(board, move) == 900
+
+
+def test_see_identifies_losing_capture():
+    """A queen capturing a pawn and being recaptured loses 800 points."""
+    board = chess.Board(
+        "3r3k/8/8/3p4/8/8/8/K2Q4 w - - 0 1"
+    )
+    move = chess.Move.from_uci("d1d5")
+
+    assert move in board.legal_moves
+    assert ai_engine.static_exchange_eval(board, move) == -800
+
+
+def test_see_returns_zero_for_quiet_move():
+    """A move that does not capture anything has no exchange score."""
+    board = chess.Board()
+    move = chess.Move.from_uci("e2e4")
+
+    assert move in board.legal_moves
+    assert ai_engine.static_exchange_eval(board, move) == 0

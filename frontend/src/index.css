@@ -62,3 +62,46 @@ button:disabled {
 #root {
   min-height: 100vh;
 }
+
+/* AI Position Analysis */
+.analysis-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.analysis-results {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color, #333);
+}
+
+.analysis-results small {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.analysis-results h3 {
+  margin: 4px 0 8px;
+  font-size: 1.5rem;
+}
+
+.analysis-results p {
+  margin: 4px 0 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.analysis-results strong {
+  font-size: 1rem;
+}
+
+.analysis-card .api-error {
+  margin: 0;
+}

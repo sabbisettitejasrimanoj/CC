@@ -34,6 +34,7 @@ import {
   type PromotionPiece,
 } from '../context/GameContext'
 import type { PieceStyle } from '../components/ChessPieces'
+import { analyzeGamePosition, type PositionAnalysis, } from '../services/gameApi'
 
 const enter = {
   initial: { opacity: 0, y: 12 },
@@ -357,7 +358,10 @@ export function GamePage() {
 } | null>(null)
   const [showToast, setShowToast] = useState(false)
   const [showResign, setShowResign] = useState(false)
-  const [showHelpModal, setShowHelpModal] = useState(false)
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [analysis, setAnalysis] = useState<PositionAnalysis | null>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
 
   const game = useMemo(() => new Chess(fen), [fen])
   const legalTargets = useMemo(
@@ -375,6 +379,11 @@ export function GamePage() {
       // Ignore
     }
   }, [theme])
+  
+  useEffect(() => {
+    setAnalysis(null)
+    setAnalysisError(null)
+  }, [fen])
 
   useEffect(() => {
     if (!showToast) return
@@ -426,7 +435,25 @@ async function choosePromotion(piece: PromotionPiece) {
     const hint = game.moves({ verbose: true })[0]
     if (hint) setSelected(hint.from)
   }
+  async function handleAnalyzePosition() {
+  if (!gameId || isAnalyzing) return
 
+  setIsAnalyzing(true)
+  setAnalysisError(null)
+
+  try {
+    const result = await analyzeGamePosition(gameId)
+    setAnalysis(result)
+  } catch (error) {
+    setAnalysisError(
+      error instanceof Error
+        ? error.message
+        : 'Unable to analyze this position.'
+    )
+  } finally {
+    setIsAnalyzing(false)
+  }
+}
   const eloRating =
     difficulties.find((d) => d.name === difficulty)?.elo || '1,200'
 
@@ -692,6 +719,51 @@ async function choosePromotion(piece: PromotionPiece) {
                   : 'FIDE-style classical rules. Positions saved automatically.'}
               </p>
             </div>
+            {/* Card 3: AI Position Analysis */}
+<div className="aside-card analysis-card">
+  <span className="eyebrow">AI POSITION ANALYSIS</span>
+
+  <button
+    type="button"
+    className="button button--primary button--wide"
+    onClick={handleAnalyzePosition}
+    disabled={!gameId || isAnalyzing}
+  >
+    {isAnalyzing ? 'Analyzing Position…' : 'Analyze Best Move'}
+  </button>
+
+  {analysisError && (
+    <p className="api-error" role="alert">{analysisError}</p>
+  )}
+
+  {analysis && (
+    <div className="analysis-results">
+      {analysis.status === 'analyzed' && analysis.best_move ? (
+        <>
+          <div>
+            <small>BEST MOVE</small>
+            <h3>{analysis.best_move.san}</h3>
+            <p>{analysis.best_move.explanation}</p>
+          </div>
+
+          <div>
+            <small>ALTERNATIVE MOVES</small>
+            {analysis.alternatives.map((move) => (
+              <div key={move.uci}>
+                <strong>{move.san}</strong>
+                <p>{move.explanation}</p>
+              </div>
+            ))}
+          </div>
+
+          <small>Search depth: {analysis.depth}</small>
+        </>
+      ) : (
+        <p>{analysis.message ?? analysis.status}</p>
+      )}
+    </div>
+  )}
+</div>
           </aside>
         </div>
       </motion.section>
